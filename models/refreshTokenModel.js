@@ -5,29 +5,29 @@ const sequelize = require("../DataBase/dataBase");
 
 //user modal
 
-const RefreshToken = sequelize.define("refreshToken", {
+const RefreshToken = sequelize.define("refreshTokens", {
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    userId: {
-        type: Sequelize.STRING,
+    user_id: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
     email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
     },
-    refreshToken: {
-        type: Sequelize.STRING,
+    refresh_token: {
+        type: DataTypes.STRING,
         allowNull: false,
         unique:true
     }
     }, {
-        tableName: 'RefreshTokens'
+        tableName: 'refreshTokens'
     }
 );
 

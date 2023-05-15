@@ -12,7 +12,7 @@ const app = express();
 const mainRouter = require('./api/route/main');
 const authRouter = require("./api/route/auth");
 const careGroupCareHomeControllerRouter = require('./api/CareGroupAndHomeRoute/careGroupAndHomeRoute');
-
+const callRoute = require('./api/callRoute/callRoute');
 var cors = require('cors');
 
 // User.sync({ force : false });
@@ -45,6 +45,8 @@ router.get("/", (req, res) => {
 app.use('/main', mainRouter);
 app.use('/auth', authRouter);
 app.use('/care', careGroupCareHomeControllerRouter);
+app.use('/call', callRoute);
+
 
 
 

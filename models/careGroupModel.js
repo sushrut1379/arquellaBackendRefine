@@ -1,59 +1,78 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../DataBase/dataBase')
 
-const CareGroup = sequelize.define('caregroup', {
-    careGroupName: {
-        type: DataTypes.STRING,
+const CareGroup = sequelize.define('careGroups', {
+    id: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true
+    },
+    care_group_name: {
+        type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
         validate: {
             len: {
-                args: [3, 15],
+                args: [3, 30],
                 msg: 'Please enter a valid name'
             }
         },
     },
-    careHomes: {
+    no_of_care_homes: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    email: {
-        type: DataTypes.STRING,
-        unique: true,
+
+
+    care_group_email: {
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
             isEmail: {
                 msg: 'Please enter a valid email'
-            } 
+            }
         },
     },
-    mobile: {
-        type: DataTypes.STRING,
-        unique: true,
+    care_group_contact_no: {
+        type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
-          len: {
-            args : [10, 13],
-            msg : 'Please enter a valid number'
-          } 
+            len: {
+                args: [6, 13],
+                msg: 'Please enter a valid number'
+            }
         },
     },
-    address: {
+    care_group_address: {
         type: DataTypes.STRING,
         validate: {
             len: {
-                args: [10, 30],
+                args: [3, 30],
                 msg: 'Please enter a valid address'
             }
         },
         allowNull: false,
     },
-    billing: {
-        type: DataTypes.STRING,
+
+    care_group_city: {
+        type: DataTypes.STRING
+    },
+
+    care_group_country: {
+        type: DataTypes.STRING
+    },
+
+
+    care_group_manager_email: {
+        type: DataTypes.STRING(50)
+    },
+    care_group_billing: {
+        type: DataTypes.STRING(100),
     }
-    }, {
-        tableName: 'CareGroups'
-    }
+
+}, {
+    tableName: 'careGroups'
+}
 )
 
 module.exports = CareGroup

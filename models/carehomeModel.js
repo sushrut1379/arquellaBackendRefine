@@ -1,33 +1,30 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../DataBase/dataBase')
 
-const CareHome = sequelize.define('carehome', {
-    careHomeName: {
-        type: DataTypes.STRING,
+const CareHome = sequelize.define('careHomes', {
+
+    id: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
-        validate: {
-            len: {
-                args: [3, 15],
-                msg: 'Please enter a valid name'
-            }
-        },
+        autoIncrement: true
     },
-    managerName: {
+    care_home_name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
         validate: {
             len: {
-                args: [3, 25],
+                args: [3, 30],
                 msg: 'Please enter a valid name'
             }
         },
     },
-	careGroup: {
-		type: DataTypes.STRING,
-		allowNull: false
-	},
-    email: {
+
+    care_group_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    care_home_email: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
@@ -37,42 +34,53 @@ const CareHome = sequelize.define('carehome', {
             }
         },
     },
-    mobile: {
+    care_home_contact_no: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         validate: {
-          len: {
-            args : [10, 13],
-            msg : 'Please enter a valid number'
-          } 
+            len: {
+                args: [6, 13],
+                msg: 'Please enter a valid number'
+            }
         },
     },
-    address: {
+    care_home_address: {
         type: DataTypes.STRING,
         validate: {
             len: {
-                args: [10, 30],
+                args: [3, 30],
                 msg: 'Please enter a valid address'
             }
         },
         allowNull: false,
     },
-    rooms: {
+    number_of_rooms_in_care_home: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    zones: {
+    number_of_zones_in_care_home: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    enSuites: {
+
+    number_of_community_rooms_in_care_home: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    }, {
-        tableName: 'CareHomes'
-    }
+
+    number_of_en_suites_in_care_home: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
+    care_home_manager_email: {
+        type: DataTypes.STRING(50)
+    },
+
+}, {
+    tableName: 'careHomes'
+}
 )
 
 module.exports = CareHome
