@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const auth = require("../../middlewares/auth")
-const {addCallController, clearCallController } = require('../../controllers/callController/callController')
+const {addCallController, clearCallController, getCallHistoryController } = require('../../controllers/callController/callController')
 
 router.post('/addcall', auth , addCallController);
-router.delete('/delete', clearCallController)
+router.post('/getcallhistory', auth , getCallHistoryController);
+
+router.delete('/delete', clearCallController);
 
 
 

@@ -54,6 +54,7 @@ const addCallController =
             // Replace the property names below with the ones you want to change
             obj.cll_caregroup=careGroup.dataValues.care_group_name;
             obj.cll_carehome=careHome.dataValues.care_home_name;
+            obj.careHome_id=careHome.dataValues.id;
             return obj;
           });
 
@@ -103,6 +104,31 @@ const addCallController =
 
     });
 
+    const getCallHistoryController = catchAsyncErrors(async (req, res, next) => {
+        let { careHomeName } = req.body
+        console.log("get call history hitted " , careHomeName);
+
+        let careHomeAndCallHistroy= await CareHome.findOne({
+            include: [
+                { model: CallModel, as: 'callHistory' }
+            ],
+            where: { care_home_name: careHomeName }
+        })
+    
+        
+        res.status(200).json({
+            message: 'Care Home added sucessfully',
+            data:  careHomeAndCallHistroy
+        })
+    
+    })
+
+
+
+
+
+
+
 
 const clearCallController = catchAsyncErrors(async (req, res, next) => {
     let { uid } = req.body
@@ -116,7 +142,7 @@ const clearCallController = catchAsyncErrors(async (req, res, next) => {
 
 
 
-module.exports = { addCallController, clearCallController };
+module.exports = { addCallController, clearCallController, getCallHistoryController };
 
 
 
