@@ -9,6 +9,7 @@ const JwtService = require('../../service/jwtService')
 const bcrypt = require('bcrypt')
 const catchAsyncErrors = require('../../middlewares/catchAsyncErrors');
 const RefreshToken = require("../../models/refreshTokenModel");
+const {errorMessageFromDataBase } = require('../../utils/CustomErrorMessage')
 
 const registerController = catchAsyncErrors(async (req, res, next) => {
     console.log("req body", req.body);
@@ -56,7 +57,7 @@ const registerController = catchAsyncErrors(async (req, res, next) => {
         "user_email_address": "test@gmail.com",
         "password": "test@123",
         "no_of_care_homes": "10",
-        
+
     }
     // let { email, password, role, careGroupName, careGroupAddress, mobile, noOfCareHomes,
     //       careHomeName, careHomeAddress, rooms, zones, enSuites, managerName   } = req.body
@@ -66,9 +67,9 @@ const registerController = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Email already taken', 400))
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("hash pass", hashedPassword)
-    user = await User.create({ user_email_address: user_email_address, password: hashedPassword, })
+    user = await User.create({ user_email_address: user_email_address, password: hashedPassword,} , { validate: false })
 
-    let careGroup= await CareGroup.create({
+    let careGroup = await CareGroup.create({
         care_group_name,
         care_group_address,
         care_group_contact_no,
@@ -76,16 +77,24 @@ const registerController = catchAsyncErrors(async (req, res, next) => {
         no_of_care_homes,
         care_group_city,
         care_group_country,
-        care_group_manager_email:user_email_address,
-        applicationUsers_id:user.id
-       
-        
-    }).catch(err => {
-        console.log("error in caregroup" , err);
+        care_group_manager_email: user_email_address,
+        applicationUsers_id: user.id
+
+
+    } ).catch(err => {
+
         if (err) {
-            console.log('err in caregoup if',err);
+            console.log('err in caregoup if', err);
             User.destroy({ where: { user_email_address: user_email_address } })
-            throw next(new ErrorHandler('There\'s an issue in Care group fields'+err.parent, 400))
+
+            //this step get us sequalise error statuse code and type of error
+            ErrorHandler.handleSequelizeError(err);
+            // throw next(new ErrorHandler('There\'s an issue in Care group fields'+err.parent, 400))
+
+            throw next(new ErrorHandler(ErrorHandler.handleSequelizeError(err).getErrorMessage, ErrorHandler.handleSequelizeError(err).getStatusCode));
+
+
+
         }
     })
 
@@ -101,17 +110,17 @@ const registerController = catchAsyncErrors(async (req, res, next) => {
         number_of_zones_in_care_home,
         number_of_en_suites_in_care_home,
         number_of_community_rooms_in_care_home,
-        care_home_manager_email:user_email_address,
-        careGroup_id:careGroup.id
+        care_home_manager_email: user_email_address,
+        careGroup_id: careGroup.id
     }).catch(err => {
-        console.log('err in caregoup',err);
 
         if (err) {
-            console.log('err in carehome if',err);
+            console.log('err in carehome if', err);
 
             User.destroy({ where: { user_email_address: user_email_address } })
             CareGroup.destroy({ where: { care_group_email: care_group_email } })
-            throw next(new ErrorHandler('There\'s an issue in Care home fields'+err.parent, 400))
+            ErrorHandler.handleSequelizeError(err);
+            throw next(new ErrorHandler(ErrorHandler.handleSequelizeError(err).getErrorMessage, ErrorHandler.handleSequelizeError(err).getStatusCode),);
         }
     })
     let access_token = JwtService.sign({ _id: user.dataValues.id, role: user.dataValues.role })

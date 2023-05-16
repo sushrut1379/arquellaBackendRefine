@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const registerController = require('../../controllers/auth/registerController');
-const {getCareGroupCareHome, addCareHomeController, getCareGroupController} = require('../../controllers/careGroupCareHomeController/careGroupCareHomeController')
+const {getCareGroupCareHome, addCareHomeController, getCareGroupController, addCareHomeController2 } = require('../../controllers/careGroupCareHomeController/careGroupCareHomeController')
 const auth = require("../../middlewares/auth")
 
 router.post('/caregroupandhomes', auth , getCareGroupCareHome)

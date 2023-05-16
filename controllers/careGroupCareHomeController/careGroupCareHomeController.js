@@ -94,8 +94,13 @@ const addCareHomeController = catchAsyncErrors(async (req, res, next) => {
     //     throw next(new ErrorHandler('Care Home contact no is already present', 400));
     // }
 
+    //this code is to avoide primary key increament....................
+    const maxPrimaryKey = await CareHome.max('id');
+    const newPrimaryKey = (maxPrimaryKey || 0) + 1;
+
 
     let careHome = await CareHome.create({
+        id:newPrimaryKey,
         care_home_name,
         care_home_address,
         care_home_contact_no,
@@ -126,6 +131,70 @@ const addCareHomeController = catchAsyncErrors(async (req, res, next) => {
         careHome: careHome
     })
 })
+
+
+
+//add careHomes constroller convetional way
+
+const addCareHomeController2 = {
+    async addCareHomeController2(req, res, next) {
+        try {
+            let {
+                care_home_name,
+                care_home_address,
+                care_home_contact_no,
+                care_home_email,
+                care_home_city,
+                care_home_country,
+                number_of_rooms_in_care_home,
+                number_of_zones_in_care_home,
+                number_of_en_suites_in_care_home,
+                number_of_community_rooms_in_care_home,
+                care_home_manager_email,
+                careGroup_id,
+                care_group_name
+            } = req.body
+        
+            console.log("addcarehome controller", req.body);
+        
+            let user = await User.findOne({ where: { user_email_address: care_home_manager_email } });
+            let careGroup = await CareGroup.findOne({ where: { care_group_name: care_group_name } });
+           
+            let careHome = await CareHome.create({
+                care_home_name,
+                care_home_address,
+                care_home_contact_no,
+                care_home_email,
+                care_home_city,
+                care_home_country,
+                number_of_rooms_in_care_home,
+                number_of_zones_in_care_home,
+                number_of_en_suites_in_care_home,
+                number_of_community_rooms_in_care_home,
+                care_home_manager_email: user.dataValues.user_email_address,
+                care_group_name: careGroup.dataValues.care_group_name,
+                careGroup_id: careGroup.dataValues.id
+            }, { validate: false } ).catch(err => {
+                console.log('err in caregoup', err);
+        
+                if (err) {
+                    console.log('err in carehome if', err);
+                    throw next(new ErrorHandler('There\'s an issue in Care home fields' + err.parent, 400))
+                }
+            })
+
+            res.status(200).json({
+                message: 'Care Home added sucessfully',
+                careHome: careHome
+            })
+           
+        } catch(err) {
+           return next(err);
+        }
+    }
+}
+
+
 
 const getCareGroupController = catchAsyncErrors(async (req, res, next) => {
     let { care_group_name } = req.body
@@ -163,6 +232,7 @@ const getCareGroupController = catchAsyncErrors(async (req, res, next) => {
 module.exports = {
     getCareGroupCareHome,
     addCareHomeController,
-    getCareGroupController
+    getCareGroupController,
+    addCareHomeController2
 
 }

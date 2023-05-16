@@ -8,6 +8,7 @@ const CareHome = require('./models/careHomeModel')
 const RefreshToken = require('./models/refreshTokenModel')
 const CallModel = require('./models/callModels/callModel');
 
+
 const sequelize = require('./DataBase/dataBase')
 
 
@@ -41,7 +42,7 @@ CareHome.hasMany(CallModel , {as: 'callHistory',
 
 
  sequelize
- .sync({ force: false }) // Set force to true to drop existing tables (Caution: this will delete data)
+ .sync({ force: true }) // Set force to true to drop existing tables (Caution: this will delete data)
  .then(() => {
    // Association order matters, make sure to sync models in the correct order
    return User.sync();
