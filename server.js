@@ -42,7 +42,7 @@ CareHome.hasMany(CallModel , {as: 'callHistory',
 
 
  sequelize
- .sync({ force: true }) // Set force to true to drop existing tables (Caution: this will delete data)
+ .sync({ force: false }) // Set force to true to drop existing tables (Caution: this will delete data)
  .then(() => {
    // Association order matters, make sure to sync models in the correct order
    return User.sync();
