@@ -1,5 +1,6 @@
 const catchAsyncErrors = require("../../middlewares/catchAsyncErrors");
-const { RefreshToken } = require('../../models/refreshTokenModel')
+const db = require('../../models')
+const RefreshToken = db.refreshToken
 
 
 const logoutController = catchAsyncErrors(async(req, res, next) => {

@@ -1,9 +1,3 @@
-const { DataTypes } = require('sequelize')
-const sequelize = require('../../DataBase/dataBase')
-
-
-
-
 
 // response body for below scema
 const requestJsonBody = {
@@ -28,85 +22,182 @@ const requestJsonBody = {
     cll_journey_ref: 'Journey123',
     cll_caregroup: 'Care Group A',
     cll_carehome: 'Care Home A'
-  };
+};
 
-const CallModel = sequelize.define('callHistory', {
-    cll_ID: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    cl_site_ID: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    cll_start_date: {
-        type: DataTypes.DATE
-    },
-    cll_end_date: {
-        type: DataTypes.DATE
-    },
-    cll_duration: {
-        type: DataTypes.INTEGER
-    },
-    cll_room: {
-        type: DataTypes.STRING(250)
-    },
-    cll_type: {
-        type: DataTypes.STRING(250)
-    },
-    cll_zone: {
-        type: DataTypes.STRING(250)
-    },
-    cll_unit_ID: {
-        type: DataTypes.INTEGER
-    },
-    cll_db_ref_id: {
-        type: DataTypes.STRING(45)
-    },
-    cll_db_date_id: {
-        type: DataTypes.STRING(45)
-    },
-    cll_db_time_id: {
-        type: DataTypes.STRING(45)
-    },
-    cll_call_group_ID: {
-        type: DataTypes.INTEGER
-    },
-    cll_worked_through: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
-    },
-    cll_carer: {
-        type: DataTypes.STRING(100)
-    },
-    cll_call_tracking_ref: {
-        type: DataTypes.STRING(200)
-    },
-    cll_clear: {
-        type: DataTypes.STRING(100)
-    },
-    cll_fb_record_id: {
-        type: DataTypes.STRING(100)
-    },
-    cll_panel_name: {
-        type: DataTypes.STRING(100)
-    },
-    cll_journey_ref: {
-        type: DataTypes.STRING(100)
-    },
-    cll_caregroup: {
-        type: DataTypes.STRING(255)
-    },
+module.exports = (sequelize, DataTypes) => {
+    const CallModel = sequelize.define('callHistory', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        cl_site_ID: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        cll_start_date: {
+            type: DataTypes.DATE
+        },
+        cll_end_date: {
+            type: DataTypes.DATE
+        },
+        cll_duration: {
+            type: DataTypes.INTEGER
+        },
+        cll_room: {
+            type: DataTypes.STRING(250)
+        },
+        cll_type: {
+            type: DataTypes.STRING(250)
+        },
+        cll_zone: {
+            type: DataTypes.STRING(250)
+        },
+        cll_unit_ID: {
+            type: DataTypes.INTEGER
+        },
+        cll_db_ref_id: {
+            type: DataTypes.STRING(45)
+        },
+        cll_db_date_id: {
+            type: DataTypes.STRING(45)
+        },
+        cll_db_time_id: {
+            type: DataTypes.STRING(45)
+        },
+        cll_call_group_ID: {
+            type: DataTypes.INTEGER
+        },
+        cll_worked_through: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        cll_carer: {
+            type: DataTypes.STRING(100)
+        },
+        cll_call_tracking_ref: {
+            type: DataTypes.STRING(200)
+        },
+        cll_clear: {
+            type: DataTypes.STRING(100)
+        },
+        cll_fb_record_id: {
+            type: DataTypes.STRING(100)
+        },
+        cll_panel_name: {
+            type: DataTypes.STRING(100)
+        },
+        cll_journey_ref: {
+            type: DataTypes.STRING(100)
+        },
+        cll_caregroup: {
+            type: DataTypes.STRING(255)
+        },
 
-    cll_carehome: {
-        type: DataTypes.STRING(255)
-    }
+        cll_carehome: {
+            type: DataTypes.STRING(255)
+        }
 
 
-}, {
-    tableName: 'callHistory'
+    }, {
+        tableName: 'callHistory'
+    })
+    return CallModel
 }
-)
 
-module.exports = CallModel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const { DataTypes } = require('sequelize')
+// const sequelize = require('../../DataBase/dataBase')
+// const CallModel = sequelize.define('callHistory', {
+//     id: {
+//         type: DataTypes.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true
+//     },
+//     cl_site_ID: {
+//         type: DataTypes.INTEGER,
+//         allowNull: false
+//     },
+//     cll_start_date: {
+//         type: DataTypes.DATE
+//     },
+//     cll_end_date: {
+//         type: DataTypes.DATE
+//     },
+//     cll_duration: {
+//         type: DataTypes.INTEGER
+//     },
+//     cll_room: {
+//         type: DataTypes.STRING(250)
+//     },
+//     cll_type: {
+//         type: DataTypes.STRING(250)
+//     },
+//     cll_zone: {
+//         type: DataTypes.STRING(250)
+//     },
+//     cll_unit_ID: {
+//         type: DataTypes.INTEGER
+//     },
+//     cll_db_ref_id: {
+//         type: DataTypes.STRING(45)
+//     },
+//     cll_db_date_id: {
+//         type: DataTypes.STRING(45)
+//     },
+//     cll_db_time_id: {
+//         type: DataTypes.STRING(45)
+//     },
+//     cll_call_group_ID: {
+//         type: DataTypes.INTEGER
+//     },
+//     cll_worked_through: {
+//         type: DataTypes.INTEGER,
+//         defaultValue: 0
+//     },
+//     cll_carer: {
+//         type: DataTypes.STRING(100)
+//     },
+//     cll_call_tracking_ref: {
+//         type: DataTypes.STRING(200)
+//     },
+//     cll_clear: {
+//         type: DataTypes.STRING(100)
+//     },
+//     cll_fb_record_id: {
+//         type: DataTypes.STRING(100)
+//     },
+//     cll_panel_name: {
+//         type: DataTypes.STRING(100)
+//     },
+//     cll_journey_ref: {
+//         type: DataTypes.STRING(100)
+//     },
+//     cll_caregroup: {
+//         type: DataTypes.STRING(255)
+//     },
+
+//     cll_carehome: {
+//         type: DataTypes.STRING(255)
+//     }
+
+
+// }, {
+//     tableName: 'callHistory'
+// }
+// )
+
+// module.exports = CallModel

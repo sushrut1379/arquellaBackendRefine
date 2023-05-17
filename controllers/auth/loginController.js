@@ -1,5 +1,7 @@
-const User = require("../../models/modalsArquella");
-const RefreshToken = require('../../models/refreshTokenModel')
+
+const db = require('../../models')
+const User = db.user
+const RefreshToken = db.refreshToken
 const JwtService = require('../../service/jwtService')
 const bcrypt = require('bcrypt')
 const Joi = require("joi");

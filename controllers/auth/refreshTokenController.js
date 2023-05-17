@@ -1,10 +1,8 @@
 const { default: CustomErrorHandler } = require("../../service/customErrorHandler")
 
-
-const { User } = require("../../models/modalsArquella");
-const { RefreshToken } = require('../../models/refreshTokenModel')
-
-const sequelize = require("../../DataBase/dataBase");
+const db = require('../../models')
+const User = db.user;
+const RefreshToken = db.refreshToken;
 
 
 const refreshTokenController = {

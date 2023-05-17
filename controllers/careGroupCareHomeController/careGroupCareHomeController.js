@@ -1,9 +1,10 @@
 
 const catchAsyncErrors = require("../../middlewares/catchAsyncErrors");
 const ErrorHandler = require('../../utils/ErrorHandler')
-const CareGroup = require('../../models/careGroupModel')
-const CareHome = require('../../models/careHomeModel')
-const User = require("../../models/modalsArquella");
+const db = require('../../models')
+const CareGroup = db.careGroup;
+const CareHome = db.careHome;
+const User = db.user;
 
 
 const getCareGroupCareHome = catchAsyncErrors(async (req, res, next) => {
@@ -66,13 +67,6 @@ const addCareHomeController = catchAsyncErrors(async (req, res, next) => {
     let user = await User.findOne({ where: { user_email_address: care_home_manager_email } });
     let careGroup = await CareGroup.findOne({ where: { care_group_name: care_group_name } });
   
-    // let careHomeDb = await CareHome.findOne({ where: { care_home_name: care_home_name } });
-    // let careHomeDbemail = await CareHome.findOne({ where: { care_home_email} });
-    // let careHomeDbContactNo = await CareHome.findOne({ where: { care_home_contact_no: care_home_contact_no } });
-
-
-
-
     if (user === null) {
         throw next(new ErrorHandler('manager email is not present in ApplicationUser DataBasse before this regiter using this email', 400))
     }
@@ -80,19 +74,6 @@ const addCareHomeController = catchAsyncErrors(async (req, res, next) => {
         throw next(new ErrorHandler('Care Group name is not present in CareGroup DataBasse regiter using this Care Group Name', 400));
     }
 
-
-    // if (careHomeDb.dataValues.care_home_name==care_home_name) {
-    //     throw next(new ErrorHandler('Care Home name is already present', 400));
-    // }
-
-    // if (
-    //     careHomeDbemail.dataValues.care_home_email== care_home_email) {
-    //     throw next(new ErrorHandler('Care Home email is already present', 400));
-    // }
-
-    // if ( careHomeDbContactNo.dataValues.care_home_contact_no == care_home_contact_no) {
-    //     throw next(new ErrorHandler('Care Home contact no is already present', 400));
-    // }
 
     //this code is to avoide primary key increament....................
     const maxPrimaryKey = await CareHome.max('id');
@@ -200,32 +181,33 @@ const getCareGroupController = catchAsyncErrors(async (req, res, next) => {
     let { care_group_name } = req.body
     console.log("get craregrupu ctrl hitted", care_group_name);
 
-    let careGroup = await CareGroup.findAll({include:CareHome
-    });
+    let careGroup = await CareGroup.findOne({ where: { care_group_name: care_group_name } });
 
-    let careGroupbyId = await CareGroup.findOne({include:CareHome});
+    if (careGroup === null) {
+        throw next(new ErrorHandler('Care Group name is not present in CareGroup DataBasse regiter using this Care Group Name', 400));
+    }
+  
 
    let careGroupByName= await CareGroup.findOne({
         include: [
             { model: CareHome, as: 'careHomes' }
         ],
         where: { care_group_name: care_group_name }
+    }).catch(err => {
+        if (err) {
+            console.log('err in caregoup if', err);
+            //this step get us sequalise error statuse code and type of error
+            ErrorHandler.handleSequelizeError(err);
+            // throw next(new ErrorHandler('There\'s an issue in Care group fields'+err.parent, 400))
+            throw next(new ErrorHandler(ErrorHandler.handleSequelizeError(err).getErrorMessage, ErrorHandler.handleSequelizeError(err).getStatusCode));
+        }
     })
 
     
     res.status(200).json({
-        message: 'Care Home added sucessfully',
+        message: 'Care Group Data',
         data:  careGroupByName
     })
-
-    //   careGroup.getCareGroupCareHome()
-
-    // await CallModel.destroy({ where: { uid } }).then(result => {
-    //     if (result == 1)
-    //         res.status(200).json({ message: 'Call cleared successfully ' })
-    //     else
-    //         res.status(404).json({ message: 'Call not found' })
-    // })
 })
 
 

@@ -1,9 +1,10 @@
 
-const CallModel = require('../../models/callModels/callModel');
 const catchAsyncErrors = require('../../middlewares/catchAsyncErrors');
 const ErrorHandler = require('../../utils/ErrorHandler')
-const CareGroup = require('../../models/careGroupModel')
-const CareHome = require('../../models/careHomeModel')
+const db = require('../../models')
+const CareGroup = db.careGroup;
+const CareHome = db.careHome;
+const CallModel = db.callHistory;
 
 //request body for call controller
 const jsonObject = {
@@ -30,7 +31,7 @@ const addCallController =
         let careHomeName = req.body.CareHomeName;
         let callDataArray = req.body.callData;
 
-        // console.log("block runni++++n", req.body);
+        console.log("block runni++++n", req.body);
         // console.log("block runni++++n", req.body.callData);
 
         let careGroup = await CareGroup.findOne({ where: { care_group_name: careGroupName } });
@@ -108,12 +109,18 @@ const addCallController =
         let { careHomeName } = req.body
         console.log("get call history hitted " , careHomeName);
 
+        let careHome = await CareHome.findOne({ where: { care_home_name: careHomeName } });
+
+        if (careHome === null) {
+            throw next(new ErrorHandler('Care Home name is not present in CareHome DataBasse regiter using this Care Home Name', 400));
+        }
+
         let careHomeAndCallHistroy= await CareHome.findOne({
             include: [
                 { model: CallModel, as: 'callHistory' }
             ],
             where: { care_home_name: careHomeName }
-        })
+        });
     
         
         res.status(200).json({
