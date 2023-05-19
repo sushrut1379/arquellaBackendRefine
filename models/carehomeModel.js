@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     care_home_name: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allowNull: false,
         validate: {
             len: {
@@ -19,13 +19,13 @@ module.exports = (sequelize, DataTypes) => {
         },
     },
 
-    care_group_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
+    // care_group_name: {
+    //     type: DataTypes.STRING,
+    //     allowNull: false
+    // },
     care_home_email: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allowNull: false,
         validate: {
             isEmail: {
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     care_home_contact_no: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allowNull: false,
         validate: {
             len: {

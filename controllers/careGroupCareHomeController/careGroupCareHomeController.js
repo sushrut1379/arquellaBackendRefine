@@ -5,28 +5,47 @@ const db = require('../../models')
 const CareGroup = db.careGroup;
 const CareHome = db.careHome;
 const User = db.user;
+const applicationUser_careGroups = db.applicationUser_careGroups
 
 
-const getCareGroupCareHome = catchAsyncErrors(async (req, res, next) => {
-    console.log("+++", req.user);
-    let careGroup = await CareGroup.findOne({ where: { managerEmail: req.user.email } })
+const getUsers = catchAsyncErrors(async (req, res, next) => {
+    const { user_email_address} = req.body
+    console.log("+++hited", req.user , user_email_address);
 
-    let careHome = await CareHome.findOne({ where: { managerEmail: req.user.email } })
-    console.log("cp res", careGroup);
-    //test commit
-    // let {email, password} = req.body
-    // if(!email || !password) {
-    //     return next(new ErrorHandler('Please enter email & password', 400))
+    // let user = await User.findOne({ where: { user_email_address: care_home_manager_email } });
+  
+    // if (user === null) {
+    //     throw next(new ErrorHandler('manager email is not present in ApplicationUser DataBasse before this regiter using this email', 400))
     // }
 
-
-    res.status(200).json({
-        working: 'care group and care home successfully',
-        careGroupOfManager: careGroup,
-        careHomeOfManager: careHome
-
+    const careGroups = await CareGroup.findAll({ include: User });
+    const careHomesWithUsers = await User.findAll({ include: CareHome })
+    
+    const users = await User.findAll({ include: CareGroup }).catch(err => {
+        if (err) {
+            console.log('err in caregoup if', err);
+            //this step get us sequalise error statuse code and type of error
+            ErrorHandler.handleSequelizeError(err);
+            // throw next(new ErrorHandler('There\'s an issue in Care group fields'+err.parent, 400))
+            throw next(new ErrorHandler(ErrorHandler.handleSequelizeError(err).getErrorMessage, ErrorHandler.handleSequelizeError(err).getStatusCode));
+        }
     })
+
+    
+    res.status(200).json({
+        message: ' Data Arquella',
+        userData:  users,
+        careGroup: careGroups ,
+        usereWithCareHomes:careHomesWithUsers
+       
+    })
+
+  
+   
+
+  
 })
+
 
 let CareHomeData = {
     "care_home_name": "Example Care Home",
@@ -178,21 +197,20 @@ const addCareHomeController2 = {
 
 
 const getCareGroupController = catchAsyncErrors(async (req, res, next) => {
-    let { care_group_name } = req.body
-    console.log("get craregrupu ctrl hitted", care_group_name);
+    let { care_group_id } = req.body
+    console.log("get craregrupu ctrl hitted", care_group_id);
 
-    let careGroup = await CareGroup.findOne({ where: { care_group_name: care_group_name } });
+    let careGroup = await CareGroup.findByPk(care_group_id);
 
     if (careGroup === null) {
-        throw next(new ErrorHandler('Care Group name is not present in CareGroup DataBasse regiter using this Care Group Name', 400));
+        throw next(new ErrorHandler('Care Group is not present in CareGroup DataBasse regiter using this Care Group', 400));
     }
   
 
-   let careGroupByName= await CareGroup.findOne({
+   let careGroupByName= await CareGroup.findByPk(care_group_id ,{
         include: [
             { model: CareHome, as: 'careHomes' }
-        ],
-        where: { care_group_name: care_group_name }
+        ]
     }).catch(err => {
         if (err) {
             console.log('err in caregoup if', err);
@@ -212,7 +230,7 @@ const getCareGroupController = catchAsyncErrors(async (req, res, next) => {
 
 
 module.exports = {
-    getCareGroupCareHome,
+    getUsers,
     addCareHomeController,
     getCareGroupController,
     addCareHomeController2

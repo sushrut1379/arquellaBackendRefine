@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         care_group_name: {
             type: DataTypes.STRING,
-            unique: true,
+            // unique: true,
             allowNull: false,
             validate: {
                 len: {
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     
         care_group_email: {
             type: DataTypes.STRING(50),
-            unique: true,
+            // unique: true,
             allowNull: false,
             validate: {
                 isEmail: {

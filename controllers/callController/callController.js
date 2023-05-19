@@ -8,8 +8,8 @@ const CallModel = db.callHistory;
 
 //request body for call controller
 const jsonObject = {
-    "CareHomeName": "Care Group A",
-    "CareGroupName": "Care Home A",
+    "CareHomeNameId": 1,
+    "CareGroupNameId": 1,
     "callData": [
         {
             "objectProperty1": "value3",
@@ -27,15 +27,16 @@ const jsonObject = {
 
 const addCallController =
     catchAsyncErrors(async (req, res, next) => {
-        let careGroupName = req.body.CareGroupName;
-        let careHomeName = req.body.CareHomeName;
+        let CareGroupNameId = req.body.CareGroupNameId;
+        let CareHomeNameId = req.body.CareHomeNameId;
         let callDataArray = req.body.callData;
 
         console.log("block runni++++n", req.body);
         // console.log("block runni++++n", req.body.callData);
 
-        let careGroup = await CareGroup.findOne({ where: { care_group_name: careGroupName } });
-        let careHome = await CareHome.findOne({ where: { care_home_name: careHomeName } });
+        let careGroup = await CareGroup.findByPk(CareGroupNameId );
+        let careHome = await CareHome.findByPk( CareHomeNameId );
+        console.log("*/*/*" , careGroup , careHome);
 
         if (careGroup === null) {
             throw next(new ErrorHandler('Care Group name is not present in DataBasse', 500))
@@ -106,25 +107,25 @@ const addCallController =
     });
 
     const getCallHistoryController = catchAsyncErrors(async (req, res, next) => {
-        let { careHomeName } = req.body
-        console.log("get call history hitted " , careHomeName);
+        let { careHomeId } = req.body
+        console.log("get call history hitted " , careHomeId);
 
-        let careHome = await CareHome.findOne({ where: { care_home_name: careHomeName } });
+        let careHome = await CareHome.findByPk(careHomeId);
 
         if (careHome === null) {
-            throw next(new ErrorHandler('Care Home name is not present in CareHome DataBasse regiter using this Care Home Name', 400));
+            throw next(new ErrorHandler('Care Home  is not present in CareHome DataBasse', 400));
         }
 
-        let careHomeAndCallHistroy= await CareHome.findOne({
+        let careHomeAndCallHistroy= await CareHome.findByPk(careHomeId,{
+            
             include: [
                 { model: CallModel, as: 'callHistory' }
-            ],
-            where: { care_home_name: careHomeName }
+            ]
         });
     
         
         res.status(200).json({
-            message: 'call history data according to care home',
+            message: 'Call history',
             data:  careHomeAndCallHistroy
         })
     

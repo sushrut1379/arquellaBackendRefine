@@ -24,14 +24,45 @@ db.careGroup = require('./careGroupModel')(sequelize, DataTypes)
 db.careHome = require('./careHomeModel')(sequelize, DataTypes)
 db.refreshToken = require('./refreshTokenModel')(sequelize, DataTypes)
 db.callHistory = require('./callModels/callModel')(sequelize, DataTypes)
+db.applicationUsers_careGroups = require('./relationShipsTable/applicationUser_careGroupModel')(sequelize, DataTypes)
+db.applicationUsers_careHomes = require('./relationShipsTable/applicationUsers_careHomeModel')(sequelize, DataTypes)
 
-db.user.hasOne(db.careGroup, {
-    foreignKey: "applicationUsers_id"
-})
 
-db.careGroup.belongsTo(db.user, {
-    foreignKey: "applicationUsers_id"
-})
+//many to many between application users and caregroups
+// In User model
+db.user.belongsToMany(db.careGroup, {
+    through: db.applicationUsers_careGroups,
+    foreignKey: 'applicationUsers_id', // Customize the foreign key name for User model
+    otherKey: 'careGroup_id', // Customize the foreign key name for Group model
+    uniqueKey: 'my_custom_unique' 
+});
+
+// In Group model
+db.careGroup.belongsToMany(db.user, {
+    through: db.applicationUsers_careGroups,
+    foreignKey: 'careGroup_id', // Customize the foreign key name for Group model
+    otherKey: 'applicationUsers_id', // Customize the foreign key name for User model
+    uniqueKey: 'my_custom_unique' 
+});
+
+
+//many to many between application users and carehomes
+// In User model
+db.user.belongsToMany(db.careHome, {
+    through: db.applicationUsers_careHomes,
+    foreignKey: 'applicationUsers_id', // Customize the foreign key name for User model
+    otherKey: 'careHomes_id', // Customize the foreign key name for home model
+    uniqueKey: 'my_custom_unique_two' 
+});
+
+// In carehomes model
+db.careHome.belongsToMany(db.user, {
+    through: db.applicationUsers_careHomes,
+    foreignKey: 'careHomes_id', // Customize the foreign key name for hme model
+    otherKey: 'applicationUsers_id', // Customize the foreign key name for User model
+    uniqueKey: 'my_custom_unique_two' 
+});
+
 
 // db.user.hasOne(db.refreshToken)
 
